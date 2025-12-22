@@ -55,7 +55,7 @@ CLOUD:
 - Click "Create Server"
 - Choose server size
 - Pay per hour or usage
-- Scale up or down anytime
+- Scale up or down anytime AS PER REQUIREMENT 
 
 Result:
 - Fast
@@ -188,6 +188,12 @@ FEW IMPORTANT FACTS
 MAJOR LINUX DISTRIBUTION FAMILIES 
 
 
+RHEL 
+UBUNTU
+AMAZON LINUX 
+DEBIAN
+
+
 
 ==================================================
 
@@ -284,6 +290,7 @@ AWS Free Tier is a starter pack for beginners.
 - Be careful with usage to avoid charges
 
 
+==============
 ======================================================
 
 DATE: 19 DEC 25
@@ -372,6 +379,180 @@ history
    46  yum install java -y
    47  java --version
    48  history
+   
+   ==========================================================
+   
+   
+   DATE: 22 DEC 25
+   
+   root dir --> / 
+
+Filesystem Hierarchy Standard (FHS):
+ 
+ 
+The Filesystem Hierarchy Standard (FHS) is a set of guidelines that define the structure and organization of directories and files on Unix-like operating systems, including Linux. It aims to ensure consistency and compatibility between different distributions of Linux, making it easier for software developers, administrators, and users to navigate and understand the file system. Here are the key components of the FHS:
+
+Root Directory (/)
+/bin: Essential command binaries that are required for system operation (e.g., ls, cp, mv).
+
+/boot: Files needed for the boot process, including boot loader configuration files and kernels.
+
+/dev: Device files representing hardware devices attached to the system (e.g., /dev/sda for the first SATA drive).
+
+/etc: Configuration files for the system and installed applications (e.g., /etc/passwd for user information).
+
+/home: Home directories for regular users (e.g., /home/ec2-user).
+
+/lib: Shared libraries needed by programs in /bin and /sbin.
+
+/media: Mount points for removable media (e.g., USB drives).
+
+/mnt: Mount points for temporary mounted filesystems.
+
+/opt: Optional software packages that are not part of the operating system distribution.
+
+/sbin: System binaries essential for system administration, typically used by the root user.
+
+/srv: Data for services provided by the system (e.g., web server data).
+
+/tmp: Temporary files that may be deleted between reboots.
+
+/usr: Secondary hierarchy for read-only user data; contains the majority of user utilities and applications.
+
+/var: Variable data files, such as logs, spool files, and temporary files that persist between reboots.
+
+---------------------
+
+root --> /
+
+ll
+
+/bin – binary or executable programs.
+
+ /sbin – binary executable programs for an administrator.
+
+/etc – system configuration files.
+
+/home – home directory. It is the default current directory.
+
+/root - home directory of root user 
+
+/opt – optional or third-party software.
+
+/tmp – temporary space, typically cleared on reboot.
+
+/usr – User related programs.
+
+/var – log files.
+
+================================
+
+nested dir 
+
+mkdir -p a/b/c/d/e
+
+
+cp  -rp src.path   dest.path
+
+
+absolute path 
+
+relative path 
+
+
+mv src.path dest
+
+mv oldname newname
+=========================
+[root@linuxserver opt]# history
+    1  whoami
+    2  hostnamectl set-hostname linuxserver
+    3  exit
+    4  pwd
+    5  cd /
+    6  pwd
+    7  ll
+    8  ls
+    9  ll
+   10  ll bin/
+   11  ll
+   12  ll sbin/
+   13  ll
+   14  ll /home/
+   15  exit
+   16  pwd
+   17  cd /opt/
+   18  pwd
+   19  ll
+   20  rm -rf aws/
+   21  ll
+   22  touch file1 file2
+   23  mkdir dir1 dir2
+   24  ll
+   25  cd dir2
+   26  ll
+   27  touch java python
+   28  ll
+   29  mkdir chiru bala naga venky
+   30  ll
+   31  cd chiru/
+   32  pwd
+   33  ll
+   34  touch pavan nagababu
+   35  pwd
+   36  cd ..
+   37  pwd
+   38  cd ..
+   39  ll
+   40  yum install tree
+   41  yum install tree -y
+   42  ll
+   43  tree
+   44  rm -rf file2
+   45  tree
+   46  ll
+   47  clear
+   48  tree
+   49  mkdir -p dir1/a/b/c/d/e
+   50  ll
+   51  tree
+   52  touch dir1/a/b/maheshbabau
+   53  tree
+   54  mkdir /opt/dir2/naga/akhil
+   55  tree
+   56  cp -rp dir2/java dir1/a/b/c/d/java
+   57  tree
+   58  cp -rp /opt/dir2/python  /opt/dir1/a/python
+   59  tree
+   60  history
+   61  ll
+   62  tree
+   63  cd dir1/a/b/
+   64  ll
+   65  pwd
+   66  cd dir2
+   67  ll
+   68  pwd
+   69  cd ../../../dir2/
+   70  ll
+   71  cd /opt/dir1/a/b
+   72  cd /opt/dir2
+   73  ll
+   74  cd /opt/
+   75  tree
+   76  mv /opt/file1 /opt/dir1/a/file1
+   77  tree
+   78  mv dir2/java dir1/java
+   79  ll
+   80  tree
+   81  ll
+   82  mv dir1 devops
+   83  ll
+   84  touch madhu
+   85  ll
+   86  mv madhu kiran
+   87  ll
+   88  histroy
 
 
 
