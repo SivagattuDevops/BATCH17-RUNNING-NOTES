@@ -553,6 +553,87 @@ mv oldname newname
    86  mv madhu kiran
    87  ll
    88  histroy
+=================
+
+========================
+
+DATE : 23 DEC 25:
+
+
+useradd uname 
+passwd uname
+
+su - uname
+
+userdel -r uname 
+
+user-home :   /home/uname
+
+cat /etc/passwd
+
+usermod -c "DevOpsUser" madhu
+
+============================================
+cat /etc/passwd 
+tail -n /etc/passwd
+tail -100f /etc/passwd
+head -n /etc/passwd
+more fname
+-----------------------------------
+
+touch fname 
+
+echo "WELCOME TO MINDCIRCUIT devops" > mcfile
+echo "be ready to work hard " >> mcfile
+--------
+
+editor: vi / vim / NANO
+
+
+vim fname 
+
+esc -- i    < insert mode > 
+
+   ----- data ----
+   ----- data ----
+   ----- data ----
+esc : w
+
+esc : q
+
+esc : wq!
+
+=================
+
+LINUX ---> VIM / NANO 
+VI/VIM EDITOR:
+
+gg - TOP LINE
+G - Ground 
+yy -- copy 
+n-yy - 
+p - paste 
+
+dd - delete a line 
+n-dd 
+
+u - undo 
+dw - delete word 
+
+----
+set nu
+set nonu 
+-------
+/madhu  (to search) 
+/touch
+/useradd
+
+n --> next 
+
+
+=====================================
+
+
 
 
 
