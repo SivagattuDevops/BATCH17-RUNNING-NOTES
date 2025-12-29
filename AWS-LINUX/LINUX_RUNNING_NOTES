@@ -424,25 +424,15 @@ Root Directory (/)
 ---------------------
 
 root --> /
-
 ll
-
 /bin – binary or executable programs.
-
  /sbin – binary executable programs for an administrator.
-
 /etc – system configuration files.
-
 /home – home directory. It is the default current directory.
-
 /root - home directory of root user 
-
 /opt – optional or third-party software.
-
 /tmp – temporary space, typically cleared on reboot.
-
 /usr – User related programs.
-
 /var – log files.
 
 ================================
@@ -456,7 +446,6 @@ cp  -rp src.path   dest.path
 
 
 absolute path 
-
 relative path 
 
 
@@ -553,7 +542,9 @@ mv oldname newname
    86  mv madhu kiran
    87  ll
    88  histroy
-=================
+
+
+
 
 ========================
 
@@ -631,11 +622,33 @@ set nonu
 n --> next 
 
 
-=====================================
-===========================================================================================================================================================================================================================================================================================================================================================================================================================
 
-DATE: 24 DEC 25
 
+
+
+
+
+
+
+
+
+
+
+
+useradd madhu 
+ 
+
+===================================
+
+cat /etc/passwd
+
+tail -n /etc/passwd
+
+head -n <fname>
+
+more fname
+
+==================
 
 wc  /etc/passwd
 
@@ -647,16 +660,15 @@ wc  -c /etc/passwd
 
 =================================
 
-yum in a package manager for RHEL / CENTOS 
+yum install java 
 
-apt or apt-get package manager for ubuntu
 
-yum install git -y 
-yum remove git -y 
+===============================================
 
-  
-which git
-whereis git 
+
+
+==================================================
+
 
 =============================================
 
@@ -664,13 +676,22 @@ diff file1 file2
 sdiff file1 file2
 ==============
 
+
+touch 
+
+vim 
+
+create a file using touch , vim , echo 
+
+echo " docker k8s terraform jenkins " > file2  ( overwrite) 
+echo " aws linux git github " >> file2  ( append) 
+
+
+========================
+
 uptime 
 
-top ( real time live dynamic data ) 
-
-q --> quit 
-
-ctrl + c --> abort / cancel
+top 
 
 lscpu 
 
@@ -681,7 +702,7 @@ free -g
 ==================================
 
 wget <link> 
-wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.113/bin/apache-tomcat-9.0.113.zip
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.106/bin/apache-tomcat-9.0.106.zip
 
 =================================
 
@@ -696,20 +717,18 @@ zip -r name.zip <folder>
 
 tar.gz
 
-wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.113/bin/apache-tomcat-9.0.113.tar.gz
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.106/bin/apache-tomcat-9.0.106.tar.gz
 
 
-tar -xvf apache-tomcat-9.0.113.tar.gz
+tar -xvf apache-tomcat-9.0.106.tar.gz
 
 tar -cvf name.tar.gz <folder> 
 
-
+===================================
 ===================================
 networking commands :
 
 PING 
-
-ping www.google.com
 ---------------------------------
 TELNET 
 
@@ -719,8 +738,6 @@ Telnet is a network protocol and command-line tool used to connect to remote sys
     telnet www.mindcircuit.in 443
     telnet 100.26.144.255 8080
    telnet 100.26.144.255 443
-
-------------------------
 
 ----------------------------------------------------------
 
@@ -778,7 +795,7 @@ sed 's/userstanga/madhustanga/' jenkins
 sed 's/userstanga/madhustanga/' jenkins  > jenkins2file
 
 
-sed 's/yum/apt/g' jenkins 
+sed -i 's/yum/apt/g' jenkins 
 
 ========================================================
 lsblk 
@@ -802,6 +819,206 @@ In Linux, the concept of drive letters like C:, D:, and E: does not exist. Inste
 df 
 df -h
 df -m 
+
+----------------------------------------------------------
+
+du -h <foldername/filename>
+
+du -sh 
+ 
+----------------------------------------------------------
+change the ownership of files and directories.:
+
+
+chmod (FILE PERMISSIONS) 
+
+The chmod command in Linux is used to change the file permissions. Permissions dictate who can read, write, or execute a file. Here's a comprehensive guide on using the chmod command:
+
+
+There are three types of users:
+
+u – the file owner (user)
+g – the group to which the file belongs
+o – others - everyone else 
+a – all (user, group, and others)
+
+------------------
+change the permissions of a file or directory --  madhu 
+
+owner/user    |  group  | others 
+
+rwx               rwx     rwx 
+
+r - read - 4
+w - write - 2
+x - execute - 1 
+
+
+Modes
+Modes can be specified using symbolic or numeric (octal) notation.
+
+Symbolic Notation
+r – read permission
+w – write permission
+x – execute permission
+
+
+
+Numeric (Octal) Notation
+4 – read permission
+2 – write permission
+1 – execute permission
+
+The numeric mode is a combination of these values. For example:
+
+7 – read, write, and execute (4 + 2 + 1)
+6 – read and write (4 + 2)
+5 – read and execute (4 + 1)
+4 – read only
+
+
+
+
+chmod -R 
+
+
+Make a script executable:
+Secure private SSH keys:
+Set directory to allow access only to owner:
+================================================
+
+What is a Group?
+A group is a collection of users. It helps manage permissions for multiple users efficiently.
+
+Each file in Linux is owned by:
+
+One user (owner)
+
+One group
+
+==========================================
+/etc/passwd	------   Stores user info (usernames, UID, shell, home)
+/etc/group	-------  Lists groups and their members
+/etc/shadow	------    Stores encrypted passwords
+==================================================================
+Shared Directory for Team::
+
+groupadd team
+usermod -aG team madhu
+usermod -aG team kiran
+mkdir /project
+chown root:team /project
+chmod 770 /project
+
+======================================
+
+CHOWN :
+
+change the ownership of files and directories.
+
+FILE & DIRECTORY OWNERSHIP :
+
+The chown command in Linux is used to change the ownership of files and directories. This command allows you to change both the user and group ownership of a file or directory.
+
+chown [options] user[:group] file(s)
+
+1. Change the Owner of a File:
+
+      chown newuser filename
+	  
+2. Change the Group of a File:
+	  
+	  chown :newgroup filename
+
+3.Change Both the Owner and Group of a File:
+     
+	  chown newuser:newgroup filename
+	  
+4. Change the Owner and Group of Multiple Files:
+
+     chown newuser:newgroup file1 fllile2 file3
+=============================================================================
+
+
+================================================================
+inode :
+
+an inode (index node) is a data structure that stores metadata about a file or directory. Every file and directory on the filesystem is associated with an inode, which contains important information about the file's attributes and location on disk.
+
+
+File Metadata:
+
+File type: --  regular file, directory, symbolic link, , etc.
+Permissions:   (read, write, execute) for the owner, group, and others.
+Owner and Group:    User ID (UID) and group ID (GID)  
+Timestamps:  
+   Last access time (atime):           Last time the file was accessed.
+   Last modification time (mtime):     Last time the file's content was modified.
+   Last status change time (ctime):  Last time the file's metadata (permissions, owner, etc.) was changed.
+   File Size:                      Size of the file in bytes.
+   
+   
+ls -i   
+ll -i 
+   
+---------------------------------------------------
+
+softlink vs hardlink 
+
+ln srcpath destlink 
+
+ln -s srcpath destlink 
+
+
+In Linux, both soft links (symbolic links) and hard links are ways to reference files. They serve different purposes and have distinct characteristics. Let's explore each with examples:
+
+ln -s /path/to/target/file   /path/to/link
+
+ln  /path/to/target/file   /path/to/hardlink
+
+
+---------------------------------
+File manipulations 
+
+
+cut -d ":" -f 1 /etc/passwd
+cut -d ":" -f 1,6 /etc/passwd
+cut -d ":" -f 1,2,3,4 /etc/passwd
+cut -d ":" -f 1-4 /etc/passwd
+
+cat /etc/passwd | cut -d ":" -f 1,6
+
+=========================================
+
+awk command 
+
+
+awk  -F":" '{print $1 }' /etc/passwd
+
+ awk -F":" '{print $1 "=" $6}'  /etc/passwd
+
+
+cat /etc/passwd | awk -F":" '{print $1 "=" $6}'
+
+
+cat /etc/passwd | awk -F":" '{print $1}'
+=========================================================================
+winscp
+
+------------------------------
+scp src dest 
+
+
+
+scp -i madhu.pem Prabhas ec2-user@ec2-54-92-176-107.compute-1.amazonaws.com:/tmp/Prabhas
+
+
+------------------------
+
+5.-R – Change ownership recursively for directories and their contents:
+chown -R newuser:newgroup /path/to/directory
+==============================================================
+
 
 
 
