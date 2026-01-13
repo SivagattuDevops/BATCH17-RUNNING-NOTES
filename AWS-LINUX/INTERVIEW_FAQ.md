@@ -883,7 +883,6 @@ fi
             sed '1d;$d' filename removes last line
 
 
-========================================================
 30.  ls && df -h, ls || df -h, ls & df -h, ls & df -h
 
     COMMAND OPERATORS IN LINUX (&& , || , &)
