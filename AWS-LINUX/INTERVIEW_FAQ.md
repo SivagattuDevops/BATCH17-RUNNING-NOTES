@@ -383,39 +383,174 @@ If SSH was working before and now it’s failing, I would:
 
 #### 22 Find and list log files older than seven days in /var/log directory?
 
-Command:
+   
 
-```bash
-find /var/log -type f -name "*.log" -mtime +7 -print
-```
- Breakdown:
+LINUX FILE TIMESTAMPS AND FIND COMMAND (COMPLETE NOTES)
 
-* `find /var/log` – Start searching in `/var/log`.
-* `-type f` – Only include regular files.
-* `-name "*.log"` – Limit to files ending with `.log`.
-* `-mtime +7` – Files modified more than 7 days ago.
-* `-print` – Display the list (avoid deleting).
+--------------------------------------------------
+LINUX FILE TIMESTAMPS
+--------------------------------------------------
+
+    Linux tracks three main timestamps for files:
+
+        mtime  : Last content modification time
+        ctime  : Last metadata change time (NOT creation)
+        atime  : Last access (read) time
+
+    NOTE:
+        Creation time (also called birth time) exists only on
+        some modern filesystems (ext4 newer versions, XFS)
+        and is not always available.
 
 
-#### 23 Find and remove log files older than seven days in /var/log directory.
- 
-```bash
-find /var/log -type f -name "*.log" -mtime +7 -exec rm -f {} \;
-```
+--------------------------------------------------
+FIND FILES OLDER THAN 7 DAYS
+--------------------------------------------------
 
-#### 25 Find and remove the log files older than 30 days in a folder.
+    Most common and correct method:
 
-Command:
+        find /path -type f -mtime +7
 
-```bash
-find /path/to/folder -type f -name "*.log" -mtime +30 -delete
-```
+    Meaning:
+        +7  → more than 7 days old
+        Based on last modification time (mtime)
 
-* `/path/to/folder` – The directory to search in.
-* `-type f` – Only regular files (not directories).
-* `-name "*.log"` – Targets files ending with `.log`.
-* `-mtime +30` – Files modified more than 30 days ago.
-* `-delete` – Removes the matched files in one go with no external `rm` processes
+    Example:
+
+        find /var/log -type f -mtime +7
+
+
+--------------------------------------------------
+FIND FILES MODIFIED WITHIN LAST 7 DAYS
+--------------------------------------------------
+
+    Command:
+
+        find /path -type f -mtime -7
+
+    Meaning:
+        -7  → less than 7 days old
+        Recently modified files
+
+    Example:
+
+        find /var/log -type f -mtime -7
+
+
+--------------------------------------------------
+FIND FILES EXACTLY 7 DAYS OLD
+--------------------------------------------------
+
+    Command:
+
+        find /path -type f -mtime 7
+
+    Meaning:
+        Files modified between 7 and 8 days ago
+        (Exact-day match)
+
+
+--------------------------------------------------
+CREATION TIME REALITY CHECK
+--------------------------------------------------
+
+    This does NOT reliably find creation time:
+
+        find /path -ctime +7    (NOT creation time)
+
+    What ctime actually means:
+
+        ctime = Change time (metadata)
+
+    ctime updates when:
+        - Permissions change
+        - Owner or group changes
+        - File is moved
+        - Metadata is modified
+
+    IMPORTANT:
+        ctime ≠ creation time
+
+
+        --------------------------------------------------
+        CHECK FILE CREATION TIME (IF SUPPORTED)
+        --------------------------------------------------
+        
+            Use stat command:
+        
+                stat filename
+        
+            Example output:
+        
+                Birth: 2026-01-01 10:22:30.000000000
+        
+            If you see "Birth", your filesystem supports
+            file creation time.
+        
+        
+        --------------------------------------------------
+        FIND FILES BASED ON DATE (BEST METHOD)
+        --------------------------------------------------
+        
+            Files created or modified after a specific date:
+        
+                find /path -type f -newermt "2026-01-01"
+        
+            Files created or modified before a date:
+        
+                find /path -type f ! -newermt "2026-01-01"
+        
+        
+        --------------------------------------------------
+        FIND FILES CREATED WITHIN LAST 7 DAYS
+        (BEST PRACTICE)
+        --------------------------------------------------
+        
+            Command:
+        
+                find /path -type f -newermt "7 days ago"
+        
+            Why this is best:
+                - Works even when creation time is unavailable
+                - Uses date-based comparison
+                - More portable and reliable
+        
+        
+        --------------------------------------------------
+        COMPARISON SUMMARY 
+        --------------------------------------------------
+        
+            Requirement                     Option
+            ------------------------------------------------
+            Older than 7 days               -mtime +7
+            Newer than 7 days               -mtime -7
+            Exactly 7 days old              -mtime 7
+            Based on modification time      -mtime
+            Based on metadata change        -ctime
+            Based on access time            -atime
+            Based on date/time              -newermt
+            True creation time              stat (Birth)
+        
+        
+        --------------------------------------------------
+        INTERVIEW-READY ANSWERS
+        --------------------------------------------------
+        
+            Find files older than 7 days:
+        
+                find /var/log -type f -mtime +7
+        
+            Find files created within last 7 days:
+        
+                find /var/log -type f -newermt "7 days ago"
+        
+            What is ctime?
+        
+                ctime is change time.
+                It tracks metadata changes, not file creation time.
+        
+
+
 
 
 #### 25 How would you write a Bash script to monitor service health?
@@ -435,40 +570,310 @@ fi
 
 
 
-#### 26 How can you find and delete files larger than 100 MB?
+#### 26 How can you find files b size and delete files larger than 100 MB?
 
 
-```bash
-find /target/folder -type f -size +100M -delete
-```
 
-* `-type f`: regular files
-* `-size +100M`: over 100 MB
-* `-delete`: remove them
+                FIND FILES BY SIZE (LINUX)
+                
+                --------------------------------------------------
+                OVERVIEW
+                --------------------------------------------------
+                
+                    The find command can be used to locate files
+                    based on their size using the -size option.
+                
+                
+                --------------------------------------------------
+                FIND FILES LARGER THAN 100 MB
+                --------------------------------------------------
+                
+                    Command:
+                
+                        find /path -type f -size +100M
+                
+                    Meaning:
+                        +100M  → files larger than 100 MB
+                        -type f → only regular files
+                
+                    Example:
+                
+                        find /var/log -type f -size +100M
+                
+                
+                --------------------------------------------------
+                FIND FILES SMALLER THAN 50 MB
+                --------------------------------------------------
+                
+                    Command:
+                
+                        find /path -type f -size -50M
+                
+                    Meaning:
+                        -50M  → files smaller than 50 MB
+                
+                
+                --------------------------------------------------
+                SIZE UNITS 
+                --------------------------------------------------
+                
+                    - c  → bytes
+                    - k  → KB
+                    - M  → MB
+                    - G  → GB
+                
+                
+                --------------------------------------------------
+                REAL-WORLD USE CASE
+                --------------------------------------------------
+                
+                    - Identify large files causing disk usage issues
+                    - Find small files for cleanup or archival
+                    - Troubleshoot sudden disk space growth
+                    - Prepare files for backup or migration
+                
+                
+                --------------------------------------------------
+                INTERVIEW ONE-LINER
+                --------------------------------------------------
+                
+                    I use the find command with the -size option,
+                    such as +100M for large files and -50M for
+                    smaller files, to quickly locate files based
+                    on their size.
+                
 
 #### 27 How do you list users who logged in today ?
 
- check `/var/log/auth.log` or `/var/log/secure`:
+    LIST USERS WHO LOGGED IN TODAY (LINUX)
+
+    --------------------------------------------------
+    OVERVIEW
+    --------------------------------------------------
+
+        To list users who logged in today, we check
+        system login records stored in log files
+        like wtmp and auth logs.
+
+
+    --------------------------------------------------
+    MOST COMMON METHOD
+    --------------------------------------------------
+
+        Using the last command:
+
+            last
+
+        - Shows login history of users
+        - Includes date and time of login
+        - Data comes from /var/log/wtmp
+
+        To filter today’s logins manually:
+            last | grep "$(date +"%b %e")"
+
+
+    --------------------------------------------------
+    LIST CURRENTLY LOGGED-IN USERS
+    --------------------------------------------------
+
+        Using who command:
+
+            who
+
+        - Shows users currently logged in
+        - Displays login time and terminal
+
+
+
+    ---------
+
 
 
 #### 28 A website isn't loading—how do you troubleshoot?
 
-Investigate in this order:
+    TROUBLESHOOTING A WEBSITE THAT IS NOT LOADING
 
-1. Is it only me? I will Check in another browser/device or use "Down for Everyone…"
-2. Browser/dev tools: Clear cache, disable extensions, check console & network tab errors.
-3. Network check: Ping/traceroute DNS resolution, firewall rules, proxy.
-4. Server-side: Ensure web server is running (e.g., `systemctl status nginx`), check server logs.
-5. App & Database: Look for errors, check DB connectivity.
-6. Infrastructure/TLS/CDN: Review SSL cert validity, CDN status, DNS settings.
-7. Wider issues: Investigate deployment changes or scaling problems.
+    --------------------------------------------------
+    OVERVIEW
+    --------------------------------------------------
+
+        When a website is not loading, I troubleshoot
+        step by step to identify whether the issue is
+        related to DNS, network, server, application,
+        or service availability.
+
+
+    --------------------------------------------------
+    CHECK DNS RESOLUTION
+    --------------------------------------------------
+
+        Verify domain name resolution:
+
+            nslookup example.com
+            dig example.com
+            ping example.com
+
+        - If domain does not resolve:
+            DNS issue
+        - If IP resolves:
+            DNS is working
+
+
+    --------------------------------------------------
+    CHECK NETWORK CONNECTIVITY
+    --------------------------------------------------
+
+        Test basic connectivity:
+
+            ping <server_ip>
+
+        Trace network path:
+
+            traceroute example.com
+
+        - Helps identify network latency or routing issues
+
+
+    --------------------------------------------------
+    CHECK SERVER AVAILABILITY
+    --------------------------------------------------
+
+        Verify server is reachable:
+
+            ssh user@server_ip
+
+        - If SSH fails:
+            Server or network issue
+
+
+    --------------------------------------------------
+    CHECK SERVICE / PORT STATUS
+    --------------------------------------------------
+
+        Check if web service port is listening:
+
+            ss -tuln | grep 80
+            ss -tuln | grep 443
+
+        Or test directly:
+
+            curl http://localhost
+            curl http://server_ip
+
+
+    --------------------------------------------------
+    CHECK WEB SERVER STATUS
+    --------------------------------------------------
+
+        For Apache:
+
+            systemctl status httpd
+
+        For Nginx:
+
+            systemctl status nginx
+
+        - Restart if required
+        - Check for failed state
+
+
+    --------------------------------------------------
+    CHECK APPLICATION LOGS
+    --------------------------------------------------
+
+        Review logs for errors or crashes:
+
+            /var/log/httpd/
+            /var/log/nginx/
+            application-specific logs
+
+        - Look for:
+            • Errors
+            • Timeouts
+            • Permission issues
+
+
+    --------------------------------------------------
+    CHECK DISK AND MEMORY
+    --------------------------------------------------
+
+        Verify disk space:
+
+            df -h
+
+        Check memory usage:
+
+            free -m
+
+        - Full disk or low memory can stop services
+
+
+    --------------------------------------------------
+    CHECK FIREWALL / SECURITY
+    --------------------------------------------------
+
+        Check firewall rules:
+
+            iptables -L
+            firewall-cmd --list-all
+
+        - Ensure ports 80 / 443 are allowed
+
+
+    --------------------------------------------------
+    RECENT CHANGES
+    --------------------------------------------------
+
+        Review recent:
+            - Deployments
+            - Configuration changes
+            - Patches or updates
+            - SSL certificate changes
+
+
+    --------------------------------------------------
+    INTERVIEW ONE-LINER
+    --------------------------------------------------
+
+        I troubleshoot a website issue by checking DNS,
+        network connectivity, server access, service and
+        port status, application logs, and recent changes
+        to quickly isolate the root cause.
+
 
 #### 29 Using `sed`, how do you delete the first and last line of a file?
 
 
-```bash
-sed -i '1d;$d' filename
-```
+    --------------------------------------------------
+    DELETE THE FIRST LINE
+    --------------------------------------------------
 
-* `1d` removes first line
-* `$d` removes last line
+        Command:
+
+            sed '1d' filename
+
+        Explanation:
+            1  → first line
+            d  → delete
+
+
+    --------------------------------------------------
+    DELETE THE LAST LINE
+    --------------------------------------------------
+
+        Command:
+
+            sed '$d' filename
+
+        Explanation:
+            $  → last line
+            d  → delete
+
+
+    --------------------------------------------------
+    DELETE BOTH FIRST AND LAST LINE
+    --------------------------------------------------
+
+        Command:
+
+            sed '1d;$d' filename removes last line
