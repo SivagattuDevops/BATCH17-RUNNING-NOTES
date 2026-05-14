@@ -1397,3 +1397,301 @@ COPY --from=buildstage  /opt/calculator /opt/calculator
 ENTRYPOINT ["/opt/calculator"]
 
 ==========================================
+
+
+DATE: 14 MAY 2026 
+
+
+
+DOCKER NETWORKING :
+
+IP address
+NIC / ethernet
+NETWORK - (VPC IN AWS TERMINOLOGY )  
+SUBNET
+GATEWAY
+
+======================================
+
+bridge
+host 
+none 
+overlay 
+
+================================
+docker network list /ls 
+docker network inspect bridge 
+
+docker network create --subnet 10.81.0.0/16 batch17dnw
+
+docker run -it --name ct33 --network batch17dnw --ip 10.81.3.33 ubuntu
+
+docker run -it --name hostnwtct --network host ubuntu
+
+docker run -itd --net batch16nw --ip 10.81.0.20 <iname> 
+
+
+docker network rm batch16nw 
+
+
+===================================================
+# 1. WHAT IS DOCKER NETWORKING?
+
+
+Docker Networking allows containers to communicate:
+- With each other
+- With host machine
+- With internet
+- With external systems/databases
+
+Without networking:
+    Containers are isolated
+
+With networking:
+    Containers can communicate
+
+========================================
+ TYPES OF DOCKER NETWORKS
+
+
+1. bridge   -> Default local container communication
+2. host     -> Share host network
+3. none     -> No networking
+4. overlay  -> Multi-Docker host communication
+5. macvlan  -> Container gets real LAN IP
+
+
+=========================================
+ BRIDGE NETWORK (MOST COMMON)
+
+
+Default Docker network.
+
+When container starts:
+    docker run nginx
+
+Docker automatically attaches it to:
+    bridge network
+
+Example:
+    Container A -> 172.17.0.2
+    Container B -> 172.17.0.3
+
+Containers communicate internally.
+
+
+===========================================
+ CHECK DOCKER NETWORKS
+
+
+docker network ls
+
+
+
+#  INSPECT NETWORK
+
+
+docker network inspect bridge
+
+
+
+# CREATE CUSTOM NETWORK (BEST PRACTICE)
+
+
+docker network create mynetwork
+
+
+
+# RUN CONTAINER IN CUSTOM NETWORK
+
+
+docker run -dit --name db --network mynetwork mysql
+
+docker run -dit --name backend --network mynetwork ubuntu
+
+
+
+# CONTAINER COMMUNICATION USING NAMES
+
+
+Containers can communicate using names:
+    db
+    backend
+    redis
+
+Example:
+    backend -> db:3306
+
+No need for IP addresses.
+
+===========================================
+
+# HOST NETWORK
+
+
+Container shares host network directly.
+
+Command:
+    docker run --network host nginx
+
+Features:
+- No container IP
+- Uses host IP directly
+- High performance
+- Less isolation
+
+======================================
+# NONE NETWORK
+
+
+No networking at all.
+
+Command:
+    docker run --network none ubuntu
+
+Container:
+- Cannot access internet
+- Cannot communicate
+
+
+=====================================================
+#  OVERLAY NETWORK
+
+
+Used in Docker Swarm / multi-host communication.
+
+Allows containers on different servers
+to communicate.
+
+Example:
+    Server1 -> frontend
+    Server2 -> backend
+
+Overlay network connects both.
+
+
+==============================================
+#  MACVLAN NETWORK
+
+
+Container gets real LAN IP address.
+
+Example:
+    Container IP = 192.168.1.50
+
+Used for:
+- Legacy applications
+- Network appliances
+- Monitoring tools
+
+
+============================================
+#  PORT MAPPING
+
+
+Expose container application externally.
+
+Command:
+    docker run -p 8080:80 nginx
+
+Meaning:
+    Host Port 8080 -> Container Port 80
+
+Access:
+    http://SERVER-IP:8080
+
+
+===============================
+#  HOW PACKET/TRAFFIC FLOWS
+
+
+Internet
+   ↓
+Host Machine
+   ↓
+Docker Port Mapping
+   ↓
+Container Application
+
+================================
+
+
+# 16. IMPORTANT NETWORK COMMANDS
+
+
+# List networks
+docker network ls
+
+# Inspect network
+docker network inspect bridge
+
+# Create network
+docker network create mynet
+
+# Remove network
+docker network rm mynet
+
+# Connect container to network
+docker network connect mynet container1
+
+# Disconnect container
+docker network disconnect mynet container1
+
+=============================================
+
+ SECURITY BEST PRACTICES
+
+
+# Use custom bridge networks
+# Expose only required ports
+# Avoid host network unless needed
+# Separate frontend/backend networks
+# Do not expose databases publicly
+
+
+===================================================================
+# DEFAULT NETWORKS CREATED BY DOCKER
+
+
+bridge   -> Default bridge network
+host     -> Host networking
+none     -> No networking
+
+
+
+# CHECK CONTAINER IP ADDRESS
+
+
+docker inspect container_name
+
+OR
+
+docker exec -it container_name ip a
+
+
+
+#  EXAMPLE: FULL APPLICATION NETWORK
+
+
+# Create network
+docker network create appnet
+
+# Run MySQL
+docker run -d \
+  --name mysql \
+  --network appnet \
+  mysql
+
+# Run Backend
+docker run -d \
+  --name backend \
+  --network appnet \
+  node-app
+
+# Run Frontend
+docker run -d \
+  --name frontend \
+  --network appnet \
+  react-app
+
+
