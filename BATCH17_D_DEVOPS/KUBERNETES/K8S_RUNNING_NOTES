@@ -298,5 +298,294 @@ SECRET ACCESS KEY
 ============================
 
 
+DATE: 26 MAY 2026
 
-==
+
+WHY K8S 
+
+High availability , Zero downtime ,
+
+docker 
+   Dockercli
+   --
+   containerd(runtime)
+
+K8S ARCHITECTURE:
+================
+
+Kubernetes Architecture is based on a master-worker model, where the Master manages and controls the cluster, and the Workers run the containerized applications. Let's break down the architecture and its core components.
+
+KUBERNETES ARCHITECTURE :
+
+Master Node:    The control plane responsible for managing the Kubernetes cluster.
+Worker Nodes:   The nodes that run the containerized applications (pods).
+Cluster:        A set of worker nodes managed by the master node.
+
+
+---------------------------------------
+
+1. MASTER NODE (CONTROL PLANE): 
+============================
+The Master Node is the brain of the Kubernetes cluster. 
+It manages the cluster, maintains the desired state, schedules workloads, and monitors the overall health of the cluster.
+It consists of several critical components:
+
+     KUBE-APISERVER:     
+     The API server is the central point of contact for all Kubernetes components. It handles requests from clients, whether that’s the kubectl CLI, the Kubernetes UI, or other components in the system.     
+     The API server exposes the REST API, which is used by external clients to interact with Kubernetes. It ensures the system’s state is updated.
+	 
+    -  The entry point /Gateway to the Kubernetes cluster.
+    -  All commands (like kubectl) talk to the API server.
+    -  Think of it as the front desk of K8s.
+	   
+	 
+	 
+     ETCD:     
+ 
+	- A key-value database that stores all cluster data — pods, deployments, secrets, etc.
+	- It is highly available and persistent - Kubernetes can recover the cluster's state even after a failure.
+	- etcd ensures consistency across the entire cluster.
+    - It’s like Kubernetes’ memory.
+     
+	 
+     KUBE-SCHEDULER:     
+     
+	- Watches for new pods that need to be scheduled.
+    - Decides which node a pod should run on (based on resources, affinity rules, etc)  
+    - ensures that workloads are distributed across nodes in an efficient and optimal manner.
+     
+     
+	 KUBE-CONTROLLER-MANAGER:     
+	 
+	- Runs various controllers (like replica controller, node controller, etc.) 
+    - Ensure that the cluster's desired state is maintained. (desired state = actual state) 
+    - Ex: if you said you want 3 replicas but only 2 are running, it creates 1 more. 
+
+     
+     CLOUD-CONTROLLER-MANAGER (OPTIONAL):     
+	 
+    - This component is used when running Kubernetes in a cloud environment. 
+	- Interacts with the underlying cloud provider (e.g., AWS, AZURE , Google Cloud) to manage resources like    load balancers, volumes, and instances.
+	- It helps in maintaining cloud-specific services in coordination with Kubernetes.
+     
+	 
+2. WORKER NODE COMPONENTS:
+===========================
+
+     A Worker Node (also called a Minion) runs the applications and workloads in the form of Pods. Each worker node contains the following components:
+     
+     KUBELET:     
+	 
+	- The agent on each worker node that talks to the API Server.
+	-  Makes sure containers are running as instructed.
+	- takes action to rectify any issues (e.g., restarting a failed container).
+	
+     
+	 
+     KUBE-PROXY:     
+	 
+	- Handles networking — ensures pods can talk to each other and the internet.
+	- Manages load balancing and routing traffic to the right pod.     
+	
+     
+     CONTAINER RUNTIME (DOCKER/ cri-o / containerd)  
+
+    - Runs the containers inside a pod (Docker, containerd, CRI-O, etc).
+    - It pulls container images, starts containers, and manages the lifecycle of containers within the pods.
+	 
+======================================     
+     PODS:     
+	 
+	- Pod : The Smallest Deployable Unit in K8S
+    - Pod is the basic building block in Kubernetes.
+	- It wraps one or more containers that share the same network and storage.
+	- Usually, one container per pod (but sometimes more if they’re tightly coupled).
+	 
+
+So who actually makes the pod run ? 
+   
+   
+   API Server - Accepts pod creation requests, validates and stores them in etcd 
+   Scheduler - Watches for unscheduled pods, selects a node - Decides which node should host the pod
+   API Server - Updates Pod with node assignment     
+   Kubelet	-  on the chosen node , talks to Container Runtime to  create containers, 
+   
+   
+ So kubelet Actually runs and monitors the pod on its node, kubelet reports status back to API SERVER 
+
+=============================================================================================
+
+
+Where can you set up a Kubernetes cluster?
+
+1. Self-managed cluster - You install and manage everything yourself.
+    Treditional approach - Self managed , barematel , customer managed k8s cluster 
+    Kubeadm → install K8s manually on servers (on-prem or in the cloud).
+	
+	
+  Kubernetes Control Plane - Self Managed  
+        Need to make Control Plane Highly Available
+        Maintain multiple EC2 in multiple AZ
+        Scale Control Plane if needed
+        Keep etcd up and running
+        Overhead of managing EC2s
+        Security Patching
+        Replace failed EC2s/vms/physical servers
+        Orchestration for Kubernetes Version Upgrade
+
+2. Managed Kubernetes services (cloud)
+    
+	 k8s cluster as a service , Cloud providers give you a ready-to-use Kubernetes control plane.
+     You just focus on your apps, not managing Kubernetes itself.
+
+         AWS	   EKS (Elastic Kubernetes Service)
+         GCP      GKE (Google Kubernetes Engine)
+         Azure	   AKS (Azure Kubernetes Service)
+
+
+
+   
+   CLOUD MANAGED KUBERNETES ( EKS / AKS / GKE ) 
+
+       Kubernetes Control Plane - AWS Managed - eks
+       
+       ● AWS Manages Kubernetes Control Plane 
+       ● Creates and manages the Control Plane for you (API server, etcd, scheduler, etc.)
+       ● Handles upgrades, scaling, and security patches automatically.
+       ● AWS maintains High Availability - Multiple EC2s in Multiple AZs
+       ● AWS Detects and Replaces Unhealthy Control Plane Instances
+       ● AWS Scales Control Plane
+       ● Provides Automated Version Upgrade and Patching
+
+
+   in EKS you only need to manage Data Plane 
+
+   ● Create Worker Nodes (EC2 instances or Fargate tasks)   - we will use managed node groups 
+   ● Deploy our  Pods and apps.
+   ● Cluster configuration
+   ● Security policies
+   ● Monitoring/logging
+   
+   
+   
+Aws - eks 
+EKS K8S CLUSTER SETUP 
+
+
+====================================================
+
+Ways To Spin Up EKS Cluster:
+
+           
+           eksctl CLI
+		   
+		   
+          
+What is eksctl - CloudFormation stack
+terraform 
+  
+
+     ● CLI tool for creating clusters on EKS
+     ● Easier than console
+     ● Abstracts lots of stuff - VPC, Subnet, Sec. Group , nodes , docker etc.
+     using CloudFormation stack 
+
+=======================	   
+aws configure
+
+Accesskey 
+Secret Access key 
+---
+AKIA5FQ3NZxxxxxxxxxxxxxxxxxx
+awdmV1Uglg3Tvxxxxxxxxxxxxxxxxxxxxx
+
+1. awscli & configufre 
+aws sts get-caller-identity
+
+once configure is done , our terminal will have admin accss to our aws account 
+
+
+=======================================================
+eks --> free
+200 $
+
+eksctl create cluster  
+
+--> it creates  two m5.large large nodes by default for data plane . Insted go for t3.micro
+
+  
+     Control Plane - AWS WILL TAKE CARE !   
+     Data Plane  - 2 m5.large worker nodes 
+
+
+eksctl create cluster --name <name> --version <> --nodegroup-name <> --node-type t3.micro --nodes 4 --managed 
+
+
+
+eksctl create cluster --name b17dcluster --nodegroup-name b17ng --node-type t3.micro --nodes 4 --managed 
+
+=======================================================
+
+
+eksctl get cluster 
+eksctl delete cluster <clustername> 
+=============================================================
+
+
+2024-11-07 19:03:13 [ℹ]  waiting for CloudFormation stack "eksctl-b15cluster-cluster"
+:
+:
+2024-11-07 19:34:33 [ℹ]  waiting for CloudFormation stack "eksctl-b15cluster-nodegroup-b15ng"
+:
+:
+2024-11-07 19:37:57 [ℹ]  nodegroup "b15ng" has 4 node(s)
+2024-11-07 19:37:57 [ℹ]  node "ip-192-168-1-245.ec2.internal" is ready
+2024-11-07 19:37:57 [ℹ]  node "ip-192-168-30-5.ec2.internal" is ready
+2024-11-07 19:37:57 [ℹ]  node "ip-192-168-48-160.ec2.internal" is ready
+2024-11-07 19:37:57 [ℹ]  node "ip-192-168-52-207.ec2.internal" is ready
+2024-11-07 19:37:57 [✔]  created 1 managed nodegroup(s) in cluster "b15cluster"
+2024-11-07 19:38:01 [ℹ]  kubectl command should work with "C:\\Users\\Dell\\.kube\\config", try 'kubectl get nodes'
+2024-11-07 19:38:01 [✔]  EKS cluster "b15cluster" in "us-east-1" region is ready
+
+
+-------------------------------------------------------------
+CONTROL PLANE (MASTER NODES) :
+
+Kubernetes master nodes are distributed across several AWS availability zones (AZ), and traffic is managed by Elastic Load Balancer (ELB).
+
+EKS is a managed service, so you have no direct access to the master nodes. And you don't need the access.
+==================================
+
+pod - Containers are encapsulated into a k8s object called pod ,in simple words pod is a abstraction on containers 
+
+Pod can have multiple continers but in general not of same container type (mostly helper container) 	
+
+--------------------------------------------
+Creating a POD from Commandline : 
+
+
+docker run --name ct1 image
+kubectl run testpod --image=tomcat 
+
+
+================================================================
+Important: Your Account Type Matters ⚠️
+
+AWS now has:
+
+            Free Plan
+            Paid Plan
+
+        EKS is usually not available on the restricted Free Plan because it is a paid service. To use EKS, you may need to upgrade to the Paid Plan. Your credits will still apply after upgrading.
+
+        So:
+        ✅ Upgrade to Paid Plan
+        ✅ Credits still remain
+        ✅ EKS charges consume credits automatically
+
+Here’s the order AWS generally follows 👇
+
+            Free Tier benefits applied first
+            Remaining bill calculated
+            AWS promotional credits applied next
+            Your card charged only if bill still remains
