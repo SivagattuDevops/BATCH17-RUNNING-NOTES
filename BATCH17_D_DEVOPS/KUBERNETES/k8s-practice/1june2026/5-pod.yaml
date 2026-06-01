@@ -1,0 +1,14 @@
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: instgram-pod
+  labels:
+    app: instagram  
+spec:
+  containers: 
+  - name: instagram-container
+    image: nginx  
+
+    

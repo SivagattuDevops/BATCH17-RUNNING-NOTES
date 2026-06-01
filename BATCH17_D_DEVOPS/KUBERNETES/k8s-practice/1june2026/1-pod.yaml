@@ -1,0 +1,21 @@
+
+
+### kubectl run fb-pod --image tomcat
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fb-pod
+  labels:
+    app: facebook
+
+spec:
+  containers:
+    - name: fb-container
+      image: tomcat
+      ports:
+        - containerPort: 8080
+
+
+

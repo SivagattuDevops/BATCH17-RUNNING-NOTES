@@ -1,0 +1,23 @@
+
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: instagram-rs
+  labels:
+    app: instagram
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: instagram
+
+  template:
+    metadata:
+      labels:
+        app: instagram
+    spec:
+      containers:
+      - name: instagram-container
+        image: nginx

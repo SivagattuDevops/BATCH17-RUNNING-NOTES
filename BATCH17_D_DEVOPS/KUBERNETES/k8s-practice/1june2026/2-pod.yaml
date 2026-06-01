@@ -1,0 +1,20 @@
+
+###$ kubectl run pod2 --image tomcat --dry-run -o yaml
+####W0601 19:58:56.259818   13440 helpers.go:719] --dry-run is deprecated and can be replaced with --dry-run=client.
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pod2
+  name: pod2
+spec:
+  containers:
+  - image: tomcat
+    name: pod2
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+
