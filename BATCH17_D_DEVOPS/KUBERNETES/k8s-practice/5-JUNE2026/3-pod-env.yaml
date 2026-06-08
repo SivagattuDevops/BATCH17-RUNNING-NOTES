@@ -1,0 +1,36 @@
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: insta
+  labels:
+    app: insta
+spec:
+  containers:
+  - name: insta 
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+    env:
+    - name: Course
+      value: "AWS DevSecOps"
+
+    - name: Batch
+      value: "Batch 17d"
+
+    - name: Trainer
+      value: "Madhukiran"
+
+    - name: Duration
+      value: "6 months"
+
+    - name: Timing
+      value: "7:30 PM to 9:30 PM"
+
+    - name: Location
+      value: "Hyderabad"
+
+    - name: Institute
+      value: "Mindcircut"

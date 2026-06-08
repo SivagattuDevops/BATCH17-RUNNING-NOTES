@@ -1,0 +1,18 @@
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fbpod
+  labels:
+    app: fbpod
+spec:
+  containers:
+  - name: fbpod 
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+    envFrom:
+    - configMapRef:
+        name: fb-config

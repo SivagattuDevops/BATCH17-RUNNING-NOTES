@@ -1,0 +1,16 @@
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fb-config
+
+data:
+  Course: "AWS DevSecOps"
+  Batch: "Batch 17d"
+  Trainer: "Madhukiran"
+  Duration: "6 months"
+  Timing: "7:30 PM to 9:30 PM"
+  Location: "Hyderabad"
+  Institute: "Mindcircut"

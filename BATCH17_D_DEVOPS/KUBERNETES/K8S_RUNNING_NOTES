@@ -1153,3 +1153,208 @@ history:
   567  kubectl get ns
   568  eksctl get cluster
   569  eksctl delete cluster b17d
+===============================
+
+
+4 JUNE :
+
+MINI PROJECT 
+
+
+
+=======================================
+
+5 JUNE 2026
+
+----------------------
+RESOURCE REQUESTS & LIMITS :
+
+Resource requests & limits :
+
+Resource Requests
+A request is the amount of CPU and memory that Kubernetes will allocate to a container. When you specify a request, Kubernetes ensures that your container will always have at least that much resource available when it runs
+
+------------
+LIMITS : 
+The maximum amount of CPU and memory the container can use. 
+If the container exceeds these, it may be throttled (CPU) or killed (Memory).
+
+
+
+with out resource requests & limits :
+
+	  
+-------
+     Kubernetes has no idea how much CPU/memory this needs.
+     It might schedule it anywhere.     
+     If the node gets busy, this pod could slow down or get evicted.     
+     It can also use unlimited CPU/memory, possibly hurting other apps.	  
+	  
+
+========================================================
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: with-resources
+spec:
+  containers:
+    - name: web
+      image: nginx:latest
+      resources:
+        requests:
+          cpu: "200m"     # needs at least 0.2 of a CPU core
+          memory: "256Mi" # needs at least 256 MB of RAM
+        limits:
+          cpu: "500m"     # can use up to 0.5 CPU core
+          memory: "512Mi" # can use up to 512 MB of RAM
+		  
+		  
+---------------------------------------------------		  
+   Kubernetes knows this pod needs a small amount of CPU/memory to start.   
+   It will schedule it on a node that has enough room.   
+   If the pod tries to use more than the limit   
+       CPU: it just gets throttled (slowed down).       
+       Memory: it gets killed (OOMKilled) to protect the node.		  
+       
+
+==========================================================================
+how to log into the pod ? 
+
+kubect exec -it <podname> -- /bin/bash
+kubect exec -it <podname> -- env
+
+----------------------
+
+ENV vs CONFIG MAP vs  SECRET 
+
+Environment Variables (ENV):
+
+        environment variables are key–value pairs injected into the container’s runtime environment.
+        App configs like port numbers, feature flags, etc.
+        Env variables are Typically non-sensitive.
+        Not encrypted.
+        Easily visible in kubectl describe pod.
+
+You can define them:
+
+       Directly in a Pod spec
+       Or indirectly using a ConfigMap or Secret
+
+
+
+ENV vs CONFIG MAP vs  SECRET 
+
+Environment Variables (ENV):
+
+        environment variables are key–value pairs injected into the container’s runtime environment.
+        App configs like port numbers, feature flags, etc.
+        Env variables are Typically non-sensitive.
+        Not encrypted.
+        Easily visible in kubectl describe pod.
+
+You can define them:
+
+       Directly in a Pod spec
+       Or indirectly using a ConfigMap or Secret
+=====================
+
+ENV:
+
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: envex-pod 
+
+spec: 
+  containers:
+    - name: insta-pod-cont
+      image: devopshubg333/batch16d:fb_httpd
+      env:
+        - name: Course
+          value: AWS DevOps 
+
+        - name: Trainer 
+          value: Madhukiran Gorekar 
+
+        - name: Institute
+          value: MindCircuit 
+    
+
+=====================
+
+ConfigMap
+
+   ConfigMaps are Kubernetes API objects that store configuration data as key–value pairs (strings).
+    They’re meant for non-sensitive settings.
+
+Ways to use a ConfigMap:
+      As environment variables
+      As command-line arguments
+      As files mounted into a container
+
+
+configmap.yaml:
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mc-config
+
+data:
+  Course: AWS DevOps 
+  Trainer: Madhukiran Gorekar
+  Institute: MindCircuit
+
+
+-------------------------------------------------
+
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-ex-pod 
+
+spec: 
+  containers:
+    - name: insta-pod-cont
+      image: devopshubg333/batch16d:fb_httpd
+
+      envFrom:
+        - configMapRef:
+            name: mc-config
+
+===========================================
+
+Secret:
+
+ Secrets are like ConfigMaps, but intended for sensitive data such as credentials or tokens.
+Kubernetes stores them base64-encoded, not encrypted by default (though you can enable encryption at rest).
+
+A Secret is used to store sensitive data, such as passwords, OAuth tokens, SSH keys, and API keys, in a way that is more secure than using a plain ConfigMap. 
+
+Secrets are encoded (base64), which helps to obscure their content but is not a fully secure solution; they are more secure than environment variables or plain text files
+
+
+encode:
+
+
+ echo -n "AWS DevOps" | base64
+QVdTIERldk9wcw==
+
+echo -n "Madhukiran Gorekar" | base64
+TWFkaHVraXJhbiBHb3Jla2Fy
+
+echo -n "MindCircuit" | base64      -----> TWluZENpcmN1aXQ=
+
+
+
+
+decode:
+echo -n "QXdzIERldk9wcw==" | base64 --decode
+echo -n "TWFkaHVraXJuYSBnb3Jla2Fy" | base64 -d
+==================================
